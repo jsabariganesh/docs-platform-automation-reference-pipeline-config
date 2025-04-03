@@ -4,9 +4,9 @@ network-properties:
   network:
     name: ((vsphere_tas_network))
   other_availability_zones:
-    - name: pks-az1
+    - name: ((other_az))
   singleton_availability_zone:
-    name: pks-az1
+    name: ((singleton_az))
 product-properties:
   .cloud_controller.allow_app_ssh_access:
     value: "true"
@@ -19,37 +19,43 @@ product-properties:
   .cloud_controller.system_domain:
     value: ((system_domain))
   .diego_brain.static_ips:
-    value: "172.16.3.120,172.16.3.121,172.16.3.122"
-  .ha_proxy.skip_cert_verify:
-    value: "true"
-  .ha_proxy.static_ips:
     value: ""
+  # .ha_proxy.skip_cert_verify:
+  #   value: "true"
+  # .ha_proxy.static_ips:
+  #   value: ""
   .mysql_monitor.recipient_email:
     value: ((mysql_monitor_recipient_email))
+  # .properties.container_networking_interface_plugin:
+  #   value: external
+  .properties.container_networking_interface_plugin:
+    value: silk
   .properties.container_networking_interface_plugin.silk.network_cidr:
     value: 10.255.0.0/16
   .properties.credhub_internal_provider_keys:
     value:
-      -
-        key:
-          secret: ((credhub_key_encryption_password_secret))
-        name: key-1
-        primary: true
+    - key:
+        secret: ((credhub_key_encryption_password_secret))
+      name: internal-key
+      primary: true
   .properties.gorouter_ssl_ciphers:
     value: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384"
-  .properties.haproxy_forward_tls:
-    value: disable
-  .properties.haproxy_ssl_ciphers:
-    value: "DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384"
+  # .properties.haproxy_forward_tls:
+  #   value: disable
+  # .properties.haproxy_ssl_ciphers:
+  #   value: "DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384"
   .properties.logger_endpoint_port:
     value: ""
   .properties.networking_poe_ssl_certs:
     value:
-      -
-        certificate:
-          cert_pem: ((networking_poe_ssl_cert.certificate))
-          private_key_pem: ((networking_poe_ssl_cert.private_key))
-        name: "Certificate 1"
+    - certificate:
+        cert_pem: ((networking_poe_ssl_sys_cert.certificate))
+        private_key_pem: ((networking_poe_ssl_sys_cert.private_key))
+      name: "systerm-cert"
+    - certificate:
+        cert_pem: ((networking_poe_ssl_app_cert.certificate))
+        private_key_pem: ((networking_poe_ssl_app_cert.private_key))
+      name: "app-cert"
   .properties.push_apps_manager_company_name:
     value: ""
   .properties.route_services:
@@ -64,10 +70,10 @@ product-properties:
     value: X
   .properties.system_blobstore:
     value: internal
-  .properties.tcp_routing:
-    value: enable
-  .properties.tcp_routing.enable.reservable_ports:
-    value: "2323"
+  # .properties.tcp_routing:
+  #   value: enable
+  # .properties.tcp_routing.enable.reservable_ports:
+  #   value: "2323"
   .properties.uaa:
     value: internal
   .router.disable_insecure_cookies:
@@ -77,9 +83,9 @@ product-properties:
   .router.request_timeout_in_seconds:
     value: "900"
   .router.static_ips:
-    value: "172.16.3.100,172.16.3.101,172.16.3.102"
+    value: "192.168.81.11,192.168.81.12,192.168.81.13"
   .tcp_router.static_ips:
-    value: "172.16.3.110,172.16.3.111,172.16.3.112"
+    value: ""
   .uaa.service_provider_key_credentials:
     value:
       cert_pem: ((service_provider_key.certificate))
@@ -94,54 +100,54 @@ resource-config:
   compute:
     instances: 2
     additional_vm_extensions: []
-  control:
-    instances: 1
-    additional_vm_extensions: []
-    nsxt:
-      ns_groups: ["pas-ssh-group"]
-      vif_type: null
-      lb:
-        server_pools:
-        - name: pas-ssh-pool
-          port: 2222
+  # control:
+  #   instances: 1
+  #   additional_vm_extensions: []
+  #   nsxt:
+  #     ns_groups: ["pas-ssh-group"]
+  #     vif_type: null
+  #     lb:
+  #       server_pools:
+  #       - name: pas-ssh-pool
+  #         port: 2222
   database:
     instances: 1
     additional_vm_extensions: []
-  ha_proxy:
-    instances: 0
-    additional_vm_extensions: []
-  istio_control:
-    instances: 0
-    additional_vm_extensions: []
-  istio_router:
-    instances: 0
-    additional_vm_extensions: []
+  # ha_proxy:
+  #   instances: 0
+  #   additional_vm_extensions: []
+  # istio_control:
+  #   instances: 0
+  #   additional_vm_extensions: []
+  # istio_router:
+  #   instances: 0
+  #   additional_vm_extensions: []
   mysql_monitor:
     instances: 0
     additional_vm_extensions: []
-  route_syncer:
-    instances: 0
-    additional_vm_extensions: []
-  router:
-    instances: 1
-    additional_vm_extensions: []
-    nsxt:
-      ns_groups: ["pas-web-group"]
-      vif_type: null
-      lb:
-        server_pools:
-        - name: pas-web-pool
-          port: 443
-  tcp_router:
-    instances: 1
-    additional_vm_extensions: []
-    nsxt:
-      ns_groups: ["pas-tcp-group"]
-      vif_type: null
-      lb:
-        server_pools:
-        - name: pas-tcp-pool
-          port: 2323
+  # route_syncer:
+  #   instances: 0
+  #   additional_vm_extensions: []
+  # router:
+  #   instances: 1
+  #   additional_vm_extensions: []
+  #   nsxt:
+  #     ns_groups: ["pas-web-group"]
+  #     vif_type: null
+  #     lb:
+  #       server_pools:
+  #       - name: pas-web-pool
+  #         port: 443
+  # tcp_router:
+  #   instances: 1
+  #   additional_vm_extensions: []
+  #   nsxt:
+  #     ns_groups: ["pas-tcp-group"]
+  #     vif_type: null
+  #     lb:
+  #       server_pools:
+  #       - name: pas-tcp-pool
+  #         port: 2323
 
 # Errands here have been disabled
 # to facilitate rapid testing of our tooling.

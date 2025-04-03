@@ -1,0 +1,2 @@
+foundations/development/vars/* filter=git-crypt diff=git-crypt
+.gitattributes !filter !diff

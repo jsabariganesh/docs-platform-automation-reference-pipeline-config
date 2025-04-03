@@ -6,17 +6,17 @@ resource_types:
 - name: pivnet
   type: docker-image
   source:
-    repository: ((concourse-team/dev_image_registry.url))/pivotalcf/pivnet-resource
-    username: ((concourse-team/dev_image_registry.username))
-    password: ((concourse-team/dev_image_registry.password))
+    repository: quay.io/tpapps/pivotalcf/pivnet-resource
+    # username: ((concourse-team/dev_image_registry.username))
+    # password: ((concourse-team/dev_image_registry.password))
     tag: latest-final
 - name: s3-with-arn
   type: docker-image
   source:
-    repository: ((concourse-team/dev_image_registry.url))/concourse/s3-resource
-    username: ((concourse-team/dev_image_registry.username))
-    password: ((concourse-team/dev_image_registry.password))
-    tag: 1.2.1-ubuntu
+    repository: quay.io/tpapps/concourse/s3-resource
+    # username: ((concourse-team/dev_image_registry.username))
+    # password: ((concourse-team/dev_image_registry.password))
+    tag: latest
 # code_snippet resources-pipeline-resource-types end yaml
 
 # code_snippet resources-pipeline-products start yaml
@@ -24,109 +24,40 @@ resources:
 - name: opsman-product
   type: s3-with-arn
   source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[ops-manager,(.*?)\]ops-manager.*?\.yml
-
-- name: pks-product
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[pivotal-container-service,(.*?)\]pivotal-container-service-.*?\.pivotal
-
-- name: pks-stemcell
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: pks-stemcell/\[stemcells-ubuntu-jammy,(.*?)\]bosh-stemcell-.*?\-vsphere.*?\.tgz
+    access_key_id: ((s3_with_role.access_key_id))
+    secret_access_key: ((s3_with_role.secret_access_key))
+    aws_role_arn: ((s3_with_role.role_arn))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
+    regexp: \[ops-manager,(.*?)\]ops-manager.*?\.ova
 
 - name: tas-product
   type: s3-with-arn
   source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
+    access_key_id: ((s3_with_role.access_key_id))
+    secret_access_key: ((s3_with_role.secret_access_key))
+    aws_role_arn: ((s3_with_role.role_arn))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
     regexp: \[elastic-runtime,(.*?)\]srt-.*?\.pivotal
 
 - name: tas-stemcell
   type: s3-with-arn
   source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
+    access_key_id: ((s3_with_role.access_key_id))
+    secret_access_key: ((s3_with_role.secret_access_key))
+    aws_role_arn: ((s3_with_role.role_arn))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
     regexp: tas-stemcell/\[stemcells-ubuntu-jammy,(.*?)\]bosh-stemcell-.*?\-vsphere.*?\.tgz
 
-- name: healthwatch-product
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[p-healthwatch,(.*?)\]healthwatch-\d.*?\.pivotal
-
-- name: healthwatch-pas-exporter
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[p-healthwatch,(.*?)\]healthwatch-pas-exporter.*?\.pivotal
-
-- name: healthwatch-pks-exporter
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[p-healthwatch,(.*?)\]healthwatch-pks-exporter.*?\.pivotal
-
-- name: healthwatch-stemcell
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: healthwatch-stemcell/\[stemcells-ubuntu-jammy,(.*?)\]bosh-stemcell-.*?\-vsphere.*?\.tgz
-
-- name: telemetry-product
-  type: s3-with-arn
-  source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
-    regexp: \[pivotal-telemetry-collector,(.*?)\]telemetry-collector-.*?\.tgz
 # code_snippet resources-pipeline-products end yaml
 
 # code_snippet resources-pipeline-platform-automation start yaml
 - name: platform-automation-pivnet
   type: pivnet
   source:
-    api_token: ((platform-automation/main.pivnet_token))
+    api_token: ((pivnet_token))
     product_slug: platform-automation
     product_version: 2\.(.*)
     sort_by: semver
@@ -134,21 +65,21 @@ resources:
 - name: platform-automation-tasks
   type: s3-with-arn
   source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
+    access_key_id: ((s3_with_role.access_key_id))
+    secret_access_key: ((s3_with_role.secret_access_key))
+    aws_role_arn: ((s3_with_role.role_arn))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
     regexp: platform-automation-tasks-(.*).zip
 
 - name: platform-automation-image
   type: s3-with-arn
   source:
-    access_key_id: ((platform-automation/main/s3_with_role.access_key_id))
-    secret_access_key: ((platform-automation/main/s3_with_role.secret_access_key))
-    aws_role_arn: ((platform-automation/main/s3_with_role.role_arn))
-    bucket: ((platform-automation/main.s3_pivnet_products_bucket))
-    region_name: ((platform-automation/main.s3_region_name))
+    access_key_id: ((s3_with_role.access_key_id))
+    secret_access_key: ((s3_with_role.secret_access_key))
+    aws_role_arn: ((s3_with_role.role_arn))
+    bucket: ((s3_pivnet_products_bucket))
+    region_name: ((s3_region_name))
     regexp: platform-automation-image-(.*).tgz
 # code_snippet resources-pipeline-platform-automation end yaml
 
@@ -156,18 +87,17 @@ resources:
 - name: configuration
   type: git
   source:
-    private_key: ((platform-automation/main/docs-ref-pipeline-repo-key.private_key))
-    uri: ((platform-automation/main.docs-ref-pipeline-repo-uri))
+    # private_key: ((docs-ref-pipeline-repo-key.private_key))
+    uri: ((docs-ref-pipeline-repo-uri))
     branch: develop
-    submodules: all
-    depth: 1
+    
 # code_snippet resources-pipeline-configurations end yaml
 
 # code_snippet resources-pipeline-triggers start yaml
-- name: daily
-  type: time
-  source:
-    interval: 24h
+# - name: daily
+#   type: time
+#   source:
+#     interval: 24h
 # code_snippet resources-pipeline-triggers end yaml
 
 # code_snippet resources-pipeline-prepare-tasks-with-secrets start yaml
@@ -190,8 +120,8 @@ jobs:
 - name: fetch-opsman
   plan:
   - in_parallel:
-    - get: daily
-      trigger: true
+    # - get: daily
+    #   trigger: true
     - get: platform-automation-image
       params:
         unpack: true
@@ -213,43 +143,11 @@ jobs:
       params:
         file: downloaded-product/*
 
-# code_snippet download-product-usage start yaml
-- name: fetch-pks
-  plan:
-  - in_parallel:
-    - get: daily
-      trigger: true
-    - get: platform-automation-image
-      params:
-        unpack: true
-    - get: platform-automation-tasks
-      params:
-        unpack: true
-    - get: configuration
-  - task: prepare-tasks-with-secrets
-    <<: *prepare-tasks-with-secrets
-  - task: download-pks-product-and-stemcell
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/download-product.yml
-    params:
-      CONFIG_FILE: download-product-pivnet/download-pks.yml
-    input_mapping:
-      config: configuration
-    output_mapping: {downloaded-stemcell: pks-stemcell}
-  - in_parallel:
-      - put: pks-product
-        params:
-          file: downloaded-product/*.pivotal
-      - put: pks-stemcell
-        params:
-          file: pks-stemcell/*.tgz
-# code_snippet download-product-usage end
-
 - name: fetch-tas
   plan:
     - in_parallel:
-      - get: daily
-        trigger: true
+      # - get: daily
+      #   trigger: true
       - get: platform-automation-image
         params:
           unpack: true
@@ -274,114 +172,6 @@ jobs:
         - put: tas-stemcell
           params:
             file: tas-stemcell/*.tgz
-
-- name: fetch-healthwatch
-  plan:
-    - in_parallel:
-      - get: daily
-        trigger: true
-      - get: platform-automation-image
-        params:
-          unpack: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: configuration
-    - task: prepare-tasks-with-secrets
-      <<: *prepare-tasks-with-secrets
-    - task: download-healthwatch-product-and-stemcell
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/download-product.yml
-      params:
-        CONFIG_FILE: download-product-pivnet/download-healthwatch.yml
-      input_mapping:
-        config: configuration
-      output_mapping: {downloaded-stemcell: healthwatch-stemcell}
-    - in_parallel:
-        - put: healthwatch-product
-          params:
-            file: downloaded-product/*healthwatch-2*.pivotal
-        - put: healthwatch-stemcell
-          params:
-            file: healthwatch-stemcell/*.tgz
-
-- name: fetch-healthwatch-pas-exporter
-  plan:
-    - in_parallel:
-      - get: daily
-        trigger: true
-      - get: platform-automation-image
-        params:
-          unpack: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: configuration
-    - task: prepare-tasks-with-secrets
-      <<: *prepare-tasks-with-secrets
-    - task: download-healthwatch-pas-exporter-and-stemcell
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/download-product.yml
-      params:
-        CONFIG_FILE: download-product-pivnet/download-healthwatch-pas-exporter.yml
-      input_mapping:
-        config: configuration
-    - in_parallel:
-        - put: healthwatch-pas-exporter
-          params:
-            file: downloaded-product/*healthwatch-pas-exporter*.pivotal
-
-- name: fetch-healthwatch-pks-exporter
-  plan:
-    - in_parallel:
-      - get: daily
-        trigger: true
-      - get: platform-automation-image
-        params:
-          unpack: true
-      - get: platform-automation-tasks
-        params:
-          unpack: true
-      - get: configuration
-    - task: prepare-tasks-with-secrets
-      <<: *prepare-tasks-with-secrets
-    - task: download-healthwatch-pks-exporter-and-stemcell
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/download-product.yml
-      params:
-        CONFIG_FILE: download-product-pivnet/download-healthwatch-pks-exporter.yml
-      input_mapping:
-        config: configuration
-    - in_parallel:
-        - put: healthwatch-pks-exporter
-          params:
-            file: downloaded-product/*healthwatch-pks-exporter*.pivotal
-
-- name: fetch-telemetry-collector
-  plan:
-    - in_parallel:
-        - get: daily
-          trigger: true
-        - get: platform-automation-image
-          params:
-            unpack: true
-        - get: platform-automation-tasks
-          params:
-            unpack: true
-        - get: configuration
-    - task: prepare-tasks-with-secrets
-      <<: *prepare-tasks-with-secrets
-    - task: download-telemetry-product
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/download-product.yml
-      params:
-        CONFIG_FILE: download-product-pivnet/download-telemetry.yml
-      input_mapping:
-        config: configuration
-    - in_parallel:
-        - put: telemetry-product
-          params:
-            file: downloaded-product/*
 
 - name: fetch-platform-automation
   # We use the pivnet resource to bootstrap the pipeline,

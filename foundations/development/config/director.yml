@@ -1,8 +1,16 @@
 az-configuration:
-- name: pks-az1
+- name: infra-az
   clusters:
-  - cluster: Cluster
-    resource_pool: pks-az1
+  - cluster: tpk_vc01_cl01
+    resource_pool: karthic-rp
+- name: deploy-az
+  clusters:
+  - cluster: tpk_vc01_cl01
+    resource_pool: karthic-rp
+- name: service-az
+  clusters:
+  - cluster: tpk_vc01_cl01
+    resource_pool: karthic-rp
 iaas-configurations:
 - additional_cloud_properties: {}
   bosh_disk_path: ((bosh_disk_path))
@@ -26,31 +34,40 @@ iaas-configurations:
   vcenter_username: ((vcenter_user.username))
 network-assignment:
   network:
-    name: Management
+    name: infra-network
   other_availability_zones: []
   singleton_availability_zone:
-    name: pks-az1
+    name: infra-az
 networks-configuration:
   icmp_checks_enabled: true
   networks:
-  - name: Management
+  - name: infra-network
     subnets:
-    - iaas_identifier: Management
-      cidr: 172.16.1.0/24
-      dns: 10.192.2.10,10.192.2.11
-      gateway: 172.16.1.1
-      reserved_ip_ranges: 172.16.1.1-172.16.1.10
+    - iaas_identifier: kart-infra
+      cidr: 192.168.80.0/24
+      dns: 10.160.143.74,192.19.189.10,192.19.189.20,192.19.189.30
+      gateway: 192.168.80.1
+      reserved_ip_ranges: 192.168.80.1-192.168.80.10
       availability_zone_names:
-      - pks-az1
-  - name: Services
+      - infra-az
+  - name: deploy-network
     subnets:
-    - iaas_identifier: Services
-      cidr: 172.16.2.0/24
-      dns: 10.192.2.10,10.192.2.11
-      gateway: 172.16.2.1
-      reserved_ip_ranges: 172.16.2.1-172.16.2.10
+    - iaas_identifier: karti-deploy
+      cidr: 192.168.81.0/24
+      dns: 10.160.143.74,192.19.189.10,192.19.189.20,192.19.189.30
+      gateway: 192.168.81.1
+      reserved_ip_ranges: 192.168.81.1-192.168.81.10
       availability_zone_names:
-      - pks-az1
+      - deploy-az
+  - name: services-network
+    subnets:
+    - iaas_identifier: karti-services
+      cidr: 192.168.82.0/24
+      dns: 10.160.143.74,192.19.189.10,192.19.189.20,192.19.189.30
+      gateway: 192.168.82.1
+      reserved_ip_ranges: 192.168.82.1-192.168.82.10
+      availability_zone_names:
+      - service-az
 properties-configuration:
   director_configuration:
     blobstore_type: local
@@ -70,7 +87,7 @@ properties-configuration:
     keep_unreachable_vms: false
     local_blobstore_options:
       enable_signed_urls: false
-    ntp_servers_string: time.svc.pivotal.io
+    ntp_servers_string: ntp.broadcom.net
     post_deploy_enabled: false
     resurrector_enabled: false
     retry_bosh_deploys: false
@@ -80,7 +97,7 @@ properties-configuration:
     handlers: []
   security_configuration:
     generate_vm_passwords: true
-    opsmanager_root_ca_trusted_certs: false
+    opsmanager_root_ca_trusted_certs: true
   syslog_configuration:
     enabled: false
 resource-configuration:
@@ -109,6 +126,7 @@ resource-configuration:
       ns_groups: []
       vif_type: null
       lb:
-        server_pools: []
+        # server_pools: []
+        server_pools: [{"name":"karti-sp","port":"80"},{"name":"karti-sp-https","port":"443"}]
 vmextensions-configuration: []
 vmtypes-configuration: {}

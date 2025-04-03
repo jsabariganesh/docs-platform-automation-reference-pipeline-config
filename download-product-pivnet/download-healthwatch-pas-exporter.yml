@@ -5,11 +5,11 @@ pivnet-product-slug: p-healthwatch
 
 file-glob: "healthwatch-pas-exporter*.pivotal"
 product-version-regex: ^2\.2\..*$
-stemcell-iaas: vsphere
+stemcell-iaas: google
 
-s3-access-key-id: ((s3_access_key_id))
-s3-secret-access-key: ((s3_secret_access_key))
+s3-access-key-id: ((s3_with_role.s3_access_key_id))
+s3-secret-access-key: ((s3_with_role.s3_secret_access_key))
 s3-bucket: ((s3_pivnet_products_bucket))
-s3-region-name: ((s3_region_name))
+s3-region-name: ((s3_with_role.s3_region_name))
 s3-stemcell-path: healthwatch-stemcell
 # code_snippet download-healthwatch-from-pivnet-usage end

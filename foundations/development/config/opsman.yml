@@ -3,21 +3,22 @@
 opsman-configuration:
   vsphere:
     vcenter:
-      url: ((vcenter_url))
-      username: ((vcenter_user.username))
-      password: ((vcenter_user.password))
-      datastore: LUN01
-      datacenter: Datacenter
-      resource_pool: /Datacenter/host/Cluster
+      url: https://tpe-tpk-vc01.lvn.broadcom.net
+      username: tpk-eso@vsphere.local
+      password: Tpk@bc0m2024
+      datastore: CL01_vsanDatastore
+      datacenter: tpk_vc01_dc
+      resource_pool: karthic-rp
       insecure: 1
-    ssh_public_key: ((vsphere_ssh_key))
+    ssh_public_key: |
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCeJbbZRFb39v4Fhg9iAQh7T/igSQt+q3MEfdLx1KUbsyqN2OSaykXROy33baMk/IVjGEPOgoK9r2W6lPAoFm67i+ej3BcQUaUsPRCIlGRPoktT7h3HLi/jLq27gmwIrS9g3PD9oEZ0mpDv10c/UmTIHRuXIVmZtjL4L05B0g/CSz66m9JE5xQaSYO5OFMd9psSQOAzwI4m3EChdABuD7c7pCOYIwv18XgFvyvxztAgM0RgMUfjx2moEyjQjad8yqtKOjqXipF6zjXWXWWDWc2WqncXmwin2XCA0u3T2W6cXk4CZmUCibIJ4YxGmh2MHDcax8tbmOLuG75f5spLEqMoUfj6GeUuFKgIkOGcVU6ExL8sKAp8LXZduIg2nLChjSebBigTmQzrKPdhkehy99JpOLx782vfDR43zz86/KxVDwSR9N+WUBGZPEqwTwx/MZFvs5pF87p7WG6AqRdRh7liBn1M0pywncvjeWYF6yyHZ0olL3owR+qH2VBFcrYu88MStm/0bAKE+z2HXANvvitGIR/ewhTOcywrGOX3Z/AH9WhSMqjEnHAGoyqZh5afCicM6KBUqbUpFAo2P+lt9vrjt8HLCw/05f50gBxMo3agzVG5grHS9p0cU0H7AqK5O0pYolfEEg82iCjgjkL7/uptT9nWuG5PwDOfyOLKXozeyw== karthick1@PG1HCYGG7C
     disk_type: thin
-    private_ip: 194.168.1.10
-    dns: 10.192.2.10,10.192.2.11
-    ntp: time.svc.pivotal.io
-    hostname: ((opsman_url))
-    network: development-PAS-Infrastructure
-    netmask: 255.255.255.0
-    gateway: 194.168.1.1
-    memory: 9
-    cpu: 2
+    private_ip: 10.159.144.19
+    dns: 10.160.143.74,192.19.189.10,192.19.189.20,192.19.189.30
+    ntp: ntp.broadcom.net
+    hostname: platauto-ops-manager
+    network: user-vlan02-3183
+    netmask: 255.255.252.0
+    gateway: 10.159.144.1 
+    memory: 8
+    cpu: 4
